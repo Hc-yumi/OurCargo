@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order-Form</title>
+
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+
+    <form action="">
+        <div class="box_con">
+
+            <form action="https://ourcargo-platform.com/callback" enctype="multipart/form-data" method="post">
+            
+            <table class="formTable">
+              <tr>
+                <th>発注内容</th>
+                <td><select name="車格">
+                    <option value="">選択してください</option>
+                    <option value="軽">軽</option>
+                    <option value="2t">2t</option>
+                    <option value="4t">4t</option>
+                    <option value="10t">10t</option>
+                  </select></td>
+              </tr>
+              <tr>
+                <th>希望料金</th>
+                <td><input size="20" type="text" name="price" /></td>
+              </tr>
+            </table>
+            
+            <div class="box_check">
+                <label>
+                    <input type="checkbox" name="acceptance-714" value="1" aria-invalid="false" class="agree"><span class="check">プライバシーポリシーに同意する</span>
+                </label>
+            </div>
+            <p class="btn">
+                <span><input type="submit" value="確認" /></span>
+            </p>
+          </form>
+
+      </div>
+    </form>
+</body>
+</html>
