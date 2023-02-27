@@ -11,6 +11,7 @@ var db *gorm.DB
 type User struct {
 	gorm.Model
 	ID          int `gorm:"primary_key"`
+	LineID		string
 	Name        string
 	CompanyID   int
 	Company     Company

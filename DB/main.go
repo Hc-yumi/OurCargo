@@ -74,6 +74,21 @@ func main() {
 				return nil
 			},
 		},
+
+		{
+			ID: "00005",
+			Migrate: func(tx *gorm.DB) error {
+				tx.AutoMigrate(
+					&dao.User{},
+				)
+
+				return nil
+			},
+			Rollback: func(tx *gorm.DB) error {
+				// return tx.Migrator().DropTable("people")
+				return nil
+			},
+		},
 	})
 
 	if err = m.Migrate(); err != nil {

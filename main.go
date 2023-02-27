@@ -14,6 +14,12 @@ import (
 	_ "gorm.io/gorm"
 )
 
+type UserProfile struct {
+	DisplayName   string `json:"displayName"`
+	PictureURL    string `json:"pictureUrl"`
+	StatusMessage string `json:"statusMessage"`
+}
+
 func main() {
 	// gin.DefaultWriter = colorable.NewColorableStdout()
 	r := gin.Default()
@@ -57,16 +63,20 @@ func main() {
 				switch message := event.Message.(type) {
 
 				case *linebot.TextMessage:
+					userID := event.Source.UserID
+
 					if message.Text == "accept" {
 						tools.Accept(req, bot, event)
+						fmt.Println(userID)
 
 					} else if message.Text == "decline" {
-
 						tools.Decline(req, bot, event)
+						fmt.Println(userID)
 
 					} else {
 						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("お確かめの上、もう一度ご回答ください。")).Do(); err != nil {
 							log.Print(err)
+							fmt.Println(userID)
 						}
 					}
 				}
@@ -89,9 +99,8 @@ func main() {
 	// 	WriteTimeout: 10 * time.Second,
 	// }
 
-	// if err := srv.ListenAndServeTLS("localhost.crt", "localhost.key"); err != nil {
-	// 	log.Fatalf("There was an error with the http server: %v", err)
-	// }
+	// client := gorequest.New()
+
 	if err := r.RunTLS(
 		":443",
 		"/etc/letsencrypt/live/ourcargo-platform.com/fullchain.pem",
@@ -105,3 +114,22 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
 	// http.ListenAndServe(":80", nil)
 }
+
+// func getProfile(userID string) (*http.Response, []error) {
+// 	request := client.Get("https://api.line.me/v2/bot/profile").
+// 		Query("user_id="+userID).
+// 		Set("Authorization", "Bearer "+"ckF2YVNKOFIHq/z83vtF+CspJaiEFTO/mAeBzN+FvY2LUb6OzlDy56nOQUv8GfZrZLiik9YZxHnCEhCbq/PHM8JY5pekcYGDcB2wN2h6oCGUub5Pv5ijC1CK+osVCpgvi1SavlLseym2rxC6vlHQ3QdB04t89/1O/w1cDnyilFU=")
+// 	response, body, errs := request.End()
+
+// 	return response, errs
+// }
+
+// func parseProfile(response *http.Response) (*UserProfile, error) {
+// 	userProfile := &UserProfile{}
+// 	err := json.NewDecoder(response.Body).Decode(userProfile)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	return userProfile, nil
+// }
