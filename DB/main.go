@@ -89,6 +89,51 @@ func main() {
 				return nil
 			},
 		},
+
+		{
+			ID: "00006",
+			Migrate: func(tx *gorm.DB) error {
+
+				// User table
+				tx.Create(&dao.User{LineID: "111"})
+				tx.Create(&dao.User{Name: "aaa"})
+				tx.Create(&dao.User{Role: "発注先"})
+				tx.Create(&dao.User{Role: "発注元"})
+				tx.Create(&dao.User{Email: "example@example.com"})
+				// tx.Create(&dao.User{Tel: "09000001111"})
+
+				// Company table
+				tx.Create(&dao.Company{CompanyName: "transport株式会社"})
+				tx.Create(&dao.Company{CompanyLocation: "千葉県市川市"})
+
+				// TruckType table
+				// tx.Create(&dao.TruckType{Price: "10000"})
+				// tx.Create(&dao.TruckType{Price: "20000"})
+				// tx.Create(&dao.TruckType{Price: "35000"})
+				// tx.Create(&dao.TruckType{Price: "50000"})
+
+				// TruckSize table
+				tx.Create(&dao.TruckSize{TruckSize: "軽"})
+				tx.Create(&dao.TruckSize{TruckSize: "2t"})
+				tx.Create(&dao.TruckSize{TruckSize: "4t"})
+				tx.Create(&dao.TruckSize{TruckSize: "10t"})
+
+				// Order table
+				tx.Create(&dao.Order{PickupLocation: "千葉県市川市"})
+				tx.Create(&dao.Order{ArrivalLocation: "東京都墨田区"})
+				// tx.Create(&dao.Order{PickupDatetime: "2006-01-02 00:00"})
+				// tx.Create(&dao.Order{ArrivalDatetime: "2006-01-02 00:00"})
+				// tx.Create(&dao.Order{Mileage: "20km"})
+				// tx.Create(&dao.Order{OrderDatetime: "111"})
+			
+				return nil
+			},
+
+			Rollback: func(tx *gorm.DB) error {
+				// return tx.Migrator().DropTable("people")
+				return nil
+			},
+		},
 	})
 
 	if err = m.Migrate(); err != nil {

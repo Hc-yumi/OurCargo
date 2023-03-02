@@ -8,6 +8,7 @@ import (
 
 var db *gorm.DB
 
+
 type User struct {
 	gorm.Model
 	ID          int `gorm:"primary_key"`

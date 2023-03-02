@@ -10,16 +10,67 @@
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
 <body>
-
-    <form action="">
         <div class="box_con">
 
-            <form action="https://ourcargo-platform.com/callback" enctype="multipart/form-data" method="post">
+            <!-- <form action="https://ourcargo-platform.com/orderpage" enctype="multipart/form-data" method="post"> -->
             
             <table class="formTable">
+
               <tr>
-                <th>発注内容</th>
-                <td><select name="車格">
+                <th>集荷日時__</th>
+                <td><input type="datetime-local" name="PickupDatetime" id="PickupDatetime"/></td>
+              </tr>
+
+              <tr>
+                <th>着荷日時__</th>
+                <td><input type="datetime-local" name="ArrivalDatetime" id="ArrivalDatetime"/></td>
+              </tr>
+
+              <!-- <tr>
+                <th>集荷場所__</th>
+                <td>
+                  <label>
+                    <span>郵便番号</span>
+                    <input type="text" name="postal_code" minlength="7" maxlength="8" pattern="\d*" autocomplete="shipping postal-code">
+                  </label>
+                  <br>
+
+                  <label>
+                    <span>都道府県</span>
+                    <select name="prefecture" autocomplete="shipping address-level1">
+                      <option value="東京都">東京都</option>
+                      <option value="千葉県">千葉県</option>
+                      <option value="神奈川県">神奈川県</option>
+                      <option value="埼玉県">埼玉県</option>
+                    </select>
+                  </label>
+                  <br>
+
+                  <label>
+                    <span>詳細住所__</span>
+                    <input type="text" name="address" autocomplete="shipping address-level2">
+                  </label>
+                  <br>
+
+                  <label>
+                    <span>倉庫名__</span>
+                    <input type="text" name="warehouse" autocomplete="shipping address-line2">
+                  </label> -->
+                  <!-- <br>
+
+                  <label>
+                    <span>バースNo.__</span>
+                    <input type="text" name="berth" autocomplete="shipping address-line2">
+                  </label>
+                  <br>
+
+                </td> -->
+              <!-- </tr> -->
+
+
+              <!-- <tr>
+                <th>車格__</th>
+                <td><select name="TruckSize">
                     <option value="">選択してください</option>
                     <option value="軽">軽</option>
                     <option value="2t">2t</option>
@@ -27,10 +78,17 @@
                     <option value="10t">10t</option>
                   </select></td>
               </tr>
+
               <tr>
                 <th>希望料金</th>
-                <td><input size="20" type="text" name="price" /></td>
+                <td><input size="20" type="text" name="Price" /></td>
+              </tr> -->
+
+              <tr>
+                <th>発注日__</th>
+                <td><input type="date" name="OrderDatetime" min="2022-12-01" max="2026-02-09" id="OrderDatetime"/></td>
               </tr>
+
             </table>
             
             <div class="box_check">
@@ -39,11 +97,46 @@
                 </label>
             </div>
             <p class="btn">
-                <span><input type="submit" value="確認" /></span>
+                <span><input type="submit" value="確認" id="runSet"/></span>
             </p>
-          </form>
+
+            <!-- <button class="btn" onclick="runUpdate(this.id)" id="{{.Selects.ID }}">更新</button> -->
+          <!-- </form> -->
 
       </div>
-    </form>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+  <script type="text/javascript" >
+      $("#runSet").on("click",function(){
+        console.log("OK");
+
+        let data = {
+          // "image_url":document.getElementById('image_url').value,
+          "PickupDatetime":document.getElementById('PickupDatetime').value,
+          "ArrivalDatetime":document.getElementById('ArrivalDatetime').value,
+          "OrderDatetime":document.getElementById('OrderDatetime').value,
+          }
+          
+        console.log("data");  
+
+      $.ajax({
+            type: 'POST',
+            url: 'https://ourcargo-platform.com/orderpage',
+            contentType: 'application/json',
+            data: JSON.stringify(data),  // access in body
+            success: alert("success"),
+                // window.location.href = 'http://localhost:8080/showpage'; // 通常の遷移
+                // window.open('http://localhost:8080/showpage', '_blank');
+            // error: function (request, status, error) {
+            //   console.log(request);
+            //     alert(error);
+            // }
+        });
+      })
+    // };
+
+
+</script>
+
 </body>
 </html>
