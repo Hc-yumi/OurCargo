@@ -11,10 +11,23 @@
 </head>
 <body>
         <div class="box_con">
-
-            <!-- <form action="https://ourcargo-platform.com/orderpage" enctype="multipart/form-data" method="post"> -->
             
             <table class="formTable">
+
+              <tr>
+                <th>UserID</th>
+                <td><input type="text" name="userid" id="UserID" ></td>
+              </tr>
+
+              <tr>
+                <th>TruckTypeID</th>
+                <td><input type="text" name="trucktypeid" id="TruckTypeID" ></td>
+              </tr>
+
+              <tr>
+                <th>TruckSizeID</th>
+                <td><input type="text" name="trucksizeid" id="TruckSizeID" ></td>
+              </tr>
 
               <tr>
                 <th>集荷日時__</th>
@@ -26,16 +39,16 @@
                 <td><input type="datetime-local" name="ArrivalDatetime" id="ArrivalDatetime"/></td>
               </tr>
 
-              <!-- <tr>
-                <th>集荷場所__</th>
+              <tr>
+                <!-- <th>集荷場所__</th>
                 <td>
                   <label>
                     <span>郵便番号</span>
                     <input type="text" name="postal_code" minlength="7" maxlength="8" pattern="\d*" autocomplete="shipping postal-code">
-                  </label>
+                  </label> -->
                   <br>
 
-                  <label>
+                  <!-- <label>
                     <span>都道府県</span>
                     <select name="prefecture" autocomplete="shipping address-level1">
                       <option value="東京都">東京都</option>
@@ -43,46 +56,54 @@
                       <option value="神奈川県">神奈川県</option>
                       <option value="埼玉県">埼玉県</option>
                     </select>
-                  </label>
+                  </label> -->
                   <br>
 
-                  <label>
+                  <!-- <label>
                     <span>詳細住所__</span>
                     <input type="text" name="address" autocomplete="shipping address-level2">
-                  </label>
+                  </label> -->
                   <br>
 
-                  <label>
+                  <!-- <label>
                     <span>倉庫名__</span>
                     <input type="text" name="warehouse" autocomplete="shipping address-line2">
                   </label> -->
-                  <!-- <br>
-
-                  <label>
-                    <span>バースNo.__</span>
-                    <input type="text" name="berth" autocomplete="shipping address-line2">
-                  </label>
                   <br>
 
-                </td> -->
-              <!-- </tr> -->
+                  <!-- <label>
+                    <span>バースNo.__</span>
+                    <input type="text" name="berth" autocomplete="shipping address-line2">
+                  </label> -->
+                  <br>
+
+                </td>
+              </tr>
+
+              <div>
+                <select name="Size">
+                    {{range .Size}}
+                        <option value="{{.ID}}">{{.Name}}</option>
+                    {{end}}
+                </select>
+              </div>  
 
 
-              <!-- <tr>
+              <tr>
                 <th>車格__</th>
-                <td><select name="TruckSize">
-                    <option value="">選択してください</option>
-                    <option value="軽">軽</option>
-                    <option value="2t">2t</option>
-                    <option value="4t">4t</option>
-                    <option value="10t">10t</option>
+                <td><select name="TruckSize" id="TruckSize">
+                    <option value="" name="none">選択してください</option>
+                    <option value="{{ .TruckSizeSmall }}">{{ .TruckSizeSmall }}</option>
+                    <option value="{{ .TruckSizeTowTon }}">{{ .TruckSizeTowTon }}</option>
+                    <option value="{{ .TruckSizeFourTon }}">{{ .TruckSizeFourTon }}</option>
+                    <option value="{{ .TruckSizeTenTon }}">{{ .TruckSizeTenTon }}</option>
                   </select></td>
               </tr>
 
-              <tr>
-                <th>希望料金</th>
+              <!-- <tr>
+                <th>希望料金__</th>
                 <td><input size="20" type="text" name="Price" /></td>
-              </tr> -->
+              </tr>  -->
 
               <tr>
                 <th>発注日__</th>
@@ -91,33 +112,35 @@
 
             </table>
             
-            <div class="box_check">
+              <div clacc="box_check"></div>
                 <label>
                     <input type="checkbox" name="acceptance-714" value="1" aria-invalid="false" class="agree"><span class="check">プライバシーポリシーに同意する</span>
                 </label>
-            </div>
+            </div> 
             <p class="btn">
                 <span><input type="submit" value="確認" id="runSet"/></span>
             </p>
 
-            <!-- <button class="btn" onclick="runUpdate(this.id)" id="{{.Selects.ID }}">更新</button> -->
-          <!-- </form> -->
-
       </div>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
-  <script type="text/javascript" >
+  <script type="text/javascript">
       $("#runSet").on("click",function(){
         console.log("OK");
 
         let data = {
-          // "image_url":document.getElementById('image_url').value,
-          "PickupDatetime":document.getElementById('PickupDatetime').value,
-          "ArrivalDatetime":document.getElementById('ArrivalDatetime').value,
+          "UserID": Number(document.getElementById('UserID').value),
+          "TruckTypeID": Number(document.getElementById('TruckTypeID').value),
+          // "TruckSizeID": Number(document.getElementById('TruckSizeID').value),
+          "PickupDatetime":new Date(document.getElementById('PickupDatetime').value),
+          "ArrivalDatetime":new Date(document.getElementById('ArrivalDatetime').value),
           "OrderDatetime":document.getElementById('OrderDatetime').value,
+
+          "TruckSize":document.getElementById('TruckSize').value,
           }
           
-        console.log("data");  
+        console.log(data);  
+
 
       $.ajax({
             type: 'POST',

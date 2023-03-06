@@ -1,4 +1,4 @@
-module example.com/m
+module github.com/ourcargo
 
 go 1.18
 

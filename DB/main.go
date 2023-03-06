@@ -3,19 +3,14 @@ package main
 import (
 	"log"
 
-	"example.com/m/dao"
+	"github.com/ourcargo/constant"
+	"github.com/ourcargo/dao"
 
 	gormigrate "github.com/go-gormigrate/gormigrate/v2"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-// type Person struct {
-// 	gorm.Model
-// 	Name string
-// 	Age  int
-// }
 
 var db *gorm.DB
 var err error
@@ -28,17 +23,10 @@ func main() {
 		log.Fatalf("Some error occured. Err: %s", err)
 	}
 
-	// db, err := gorm.Open("sqlite3", "mydb.sqlite3")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// db.LogMode(true)
-
 	m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{
 		// create persons table
 		{
-			ID: "00004",
+			ID: "2023030011",
 			Migrate: func(tx *gorm.DB) error {
 				tx.AutoMigrate(
 					&dao.User{},
@@ -48,89 +36,69 @@ func main() {
 					&dao.Order{},
 				)
 
-				tx.Migrator().CreateConstraint(&dao.User{}, "CompanyID")
-				tx.Migrator().CreateConstraint(&dao.User{}, "fk_users_company")
+				// tx.Migrator().CreateConstraint(&dao.User{}, "Company")
+				// tx.Migrator().CreateConstraint(&dao.User{}, "fk_company_id")
 
-				tx.Migrator().CreateConstraint(&dao.TruckType{}, "UserID")
-				tx.Migrator().CreateConstraint(&dao.TruckType{}, "fk_trucktypes_user")
+				// tx.Migrator().CreateConstraint(&dao.TruckType{}, "User")
+				// tx.Migrator().CreateConstraint(&dao.TruckType{}, "fk_user_id")
 
-				tx.Migrator().CreateConstraint(&dao.TruckType{}, "TruckSizeID")
-				tx.Migrator().CreateConstraint(&dao.TruckType{}, "fk_trucktypes_trucksize")
+				// tx.Migrator().CreateConstraint(&dao.TruckType{}, "TruckSize")
+				// tx.Migrator().CreateConstraint(&dao.TruckType{}, "fk_trucksize_id")
 
-				tx.Migrator().CreateConstraint(&dao.Order{}, "UserID")
-				tx.Migrator().CreateConstraint(&dao.Order{}, "fk_orders_user")
+				// tx.Migrator().CreateConstraint(&dao.Order{}, "User")
+				// tx.Migrator().CreateConstraint(&dao.Order{}, "fk_user_id")
 
-				tx.Migrator().CreateConstraint(&dao.Order{}, "TruckTypeID")
-				tx.Migrator().CreateConstraint(&dao.Order{}, "fk_orders_trucktype")
+				// tx.Migrator().CreateConstraint(&dao.Order{}, "TruckType")
+				// tx.Migrator().CreateConstraint(&dao.Order{}, "fk_trucktype_id")
 
-				tx.Migrator().CreateConstraint(&dao.Order{}, "TruckSizeID")
-				tx.Migrator().CreateConstraint(&dao.Order{}, "fk_orders_trucksize")
+				// tx.Migrator().CreateConstraint(&dao.Order{}, "TruckSize")
+				// tx.Migrator().CreateConstraint(&dao.Order{}, "fk_trucksize_id")
 
 				return nil
 			},
 
 			Rollback: func(tx *gorm.DB) error {
-				// return tx.Migrator().DropTable("people")
 				return nil
 			},
 		},
 
 		{
-			ID: "00005",
+			ID: "2023030012",
 			Migrate: func(tx *gorm.DB) error {
-				tx.AutoMigrate(
-					&dao.User{},
-				)
-
-				return nil
-			},
-			Rollback: func(tx *gorm.DB) error {
-				// return tx.Migrator().DropTable("people")
-				return nil
-			},
-		},
-
-		{
-			ID: "00006",
-			Migrate: func(tx *gorm.DB) error {
-
-				// User table
-				tx.Create(&dao.User{LineID: "111"})
-				tx.Create(&dao.User{Name: "aaa"})
-				tx.Create(&dao.User{Role: "発注先"})
-				tx.Create(&dao.User{Role: "発注元"})
-				tx.Create(&dao.User{Email: "example@example.com"})
-				// tx.Create(&dao.User{Tel: "09000001111"})
 
 				// Company table
-				tx.Create(&dao.Company{CompanyName: "transport株式会社"})
-				tx.Create(&dao.Company{CompanyLocation: "千葉県市川市"})
+				tx.Create(&dao.Company{CompanyName: "transport株式会社", CompanyLocation: "千葉県市川市"})
 
-				// TruckType table
-				// tx.Create(&dao.TruckType{Price: "10000"})
-				// tx.Create(&dao.TruckType{Price: "20000"})
-				// tx.Create(&dao.TruckType{Price: "35000"})
-				// tx.Create(&dao.TruckType{Price: "50000"})
+				// User table
+				tx.Create(&dao.User{Name: "aaa",
+					LineID:  "yyy",
+					Role:    "発注先",
+					Email:   "example@example.com",
+					Company: dao.Company{ID: 1}})
 
 				// TruckSize table
-				tx.Create(&dao.TruckSize{TruckSize: "軽"})
-				tx.Create(&dao.TruckSize{TruckSize: "2t"})
-				tx.Create(&dao.TruckSize{TruckSize: "4t"})
-				tx.Create(&dao.TruckSize{TruckSize: "10t"})
+				tx.Create(&dao.TruckSize{TruckSize: constant.TruckSizeSmall})
+				tx.Create(&dao.TruckSize{TruckSize: constant.TruckSizeTowTon})
+				tx.Create(&dao.TruckSize{TruckSize: constant.TruckSizeFourTon})
+				tx.Create(&dao.TruckSize{TruckSize: constant.TruckSizeTenTon})
+
+				// TruckType table
+				tx.Create(&dao.TruckType{User: dao.User{ID: 1},
+					TruckSize: dao.TruckSize{ID: 1},
+					Price:     "￥10,000"})
 
 				// Order table
-				tx.Create(&dao.Order{PickupLocation: "千葉県市川市"})
-				tx.Create(&dao.Order{ArrivalLocation: "東京都墨田区"})
-				// tx.Create(&dao.Order{PickupDatetime: "2006-01-02 00:00"})
-				// tx.Create(&dao.Order{ArrivalDatetime: "2006-01-02 00:00"})
-				// tx.Create(&dao.Order{Mileage: "20km"})
-				// tx.Create(&dao.Order{OrderDatetime: "111"})
-			
+				tx.Create(&dao.Order{User: dao.User{ID: 1},
+					TruckType:       dao.TruckType{ID: 1},
+					TruckSize:       dao.TruckSize{ID: 1},
+					PickupLocation:  "千葉県市川市",
+					ArrivalLocation: "東京都墨田区",
+					Mileage:         "20km"})
+
 				return nil
 			},
 
 			Rollback: func(tx *gorm.DB) error {
-				// return tx.Migrator().DropTable("people")
 				return nil
 			},
 		},
