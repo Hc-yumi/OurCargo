@@ -27,15 +27,15 @@ type Company struct {
 	CompanyLocation string
 }
 
-type TruckType struct {
-	gorm.Model
-	ID          int
-	UserID      int
-	User        User
-	TruckSizeID int
-	TruckSize   TruckSize
-	Price       string
-}
+// type TruckType struct {
+// 	gorm.Model
+// 	ID          int
+// 	UserID      int
+// 	User        User
+// 	TruckSizeID int
+// 	TruckSize   TruckSize
+// 	Price       string
+// }
 
 type TruckSize struct {
 	gorm.Model
@@ -45,13 +45,14 @@ type TruckSize struct {
 
 type Order struct {
 	gorm.Model
-	ID              int
-	UserID          int
-	User            User
-	TruckTypeID     int
-	TruckType       TruckType
+	ID     int
+	UserID int
+	User   User
+	// TruckTypeID int
+	// TruckType       TruckType
 	TruckSizeID     int
 	TruckSize       TruckSize
+	Price           string
 	PickupLocation  string
 	ArrivalLocation string
 	PickupDatetime  time.Time

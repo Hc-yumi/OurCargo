@@ -26,12 +26,12 @@ func main() {
 	m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{
 		// create persons table
 		{
-			ID: "2023030011",
+			ID: "2023030007",
 			Migrate: func(tx *gorm.DB) error {
 				tx.AutoMigrate(
 					&dao.User{},
 					&dao.Company{},
-					&dao.TruckType{},
+					// &dao.TruckType{},
 					&dao.TruckSize{},
 					&dao.Order{},
 				)
@@ -63,7 +63,7 @@ func main() {
 		},
 
 		{
-			ID: "2023030012",
+			ID: "2023030008",
 			Migrate: func(tx *gorm.DB) error {
 
 				// Company table
@@ -82,14 +82,8 @@ func main() {
 				tx.Create(&dao.TruckSize{TruckSize: constant.TruckSizeFourTon})
 				tx.Create(&dao.TruckSize{TruckSize: constant.TruckSizeTenTon})
 
-				// TruckType table
-				tx.Create(&dao.TruckType{User: dao.User{ID: 1},
-					TruckSize: dao.TruckSize{ID: 1},
-					Price:     "￥10,000"})
-
 				// Order table
 				tx.Create(&dao.Order{User: dao.User{ID: 1},
-					TruckType:       dao.TruckType{ID: 1},
 					TruckSize:       dao.TruckSize{ID: 1},
 					PickupLocation:  "千葉県市川市",
 					ArrivalLocation: "東京都墨田区",

@@ -8,25 +8,17 @@
 
     <!-- <link rel="stylesheet" href="css/style.css"> -->
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <!-- <style>body{padding:0;margin:0;background:#333;}h1{padding:0;margin:0;font-size:50%;color:white;}div{float: left;}</style> -->
+
 </head>
 <body>
-        <div class="box_con">
+        <div class="box_con" id="form">
             
             <table class="formTable">
 
               <tr>
                 <th>UserID</th>
                 <td><input type="text" name="userid" id="UserID" ></td>
-              </tr>
-
-              <tr>
-                <th>TruckTypeID</th>
-                <td><input type="text" name="trucktypeid" id="TruckTypeID" ></td>
-              </tr>
-
-              <tr>
-                <th>TruckSizeID</th>
-                <td><input type="text" name="trucksizeid" id="TruckSizeID" ></td>
               </tr>
 
               <tr>
@@ -40,70 +32,58 @@
               </tr>
 
               <tr>
-                <!-- <th>集荷場所__</th>
-                <td>
-                  <label>
-                    <span>郵便番号</span>
-                    <input type="text" name="postal_code" minlength="7" maxlength="8" pattern="\d*" autocomplete="shipping postal-code">
-                  </label> -->
-                  <br>
 
-                  <!-- <label>
-                    <span>都道府県</span>
-                    <select name="prefecture" autocomplete="shipping address-level1">
-                      <option value="東京都">東京都</option>
-                      <option value="千葉県">千葉県</option>
-                      <option value="神奈川県">神奈川県</option>
-                      <option value="埼玉県">埼玉県</option>
-                    </select>
-                  </label> -->
-                  <br>
-
-                  <!-- <label>
-                    <span>詳細住所__</span>
-                    <input type="text" name="address" autocomplete="shipping address-level2">
-                  </label> -->
-                  <br>
-
-                  <!-- <label>
-                    <span>倉庫名__</span>
-                    <input type="text" name="warehouse" autocomplete="shipping address-line2">
-                  </label> -->
-                  <br>
-
-                  <!-- <label>
-                    <span>バースNo.__</span>
-                    <input type="text" name="berth" autocomplete="shipping address-line2">
-                  </label> -->
-                  <br>
-
-                </td>
+                <!-- <th>集荷場所__</th> -->
+                <h1>ここに表示</h1>
+                <th><label for="point1">集荷場所_住所:</label></th>
+                <td><input type="text" id="point1" name="point1"></td>
+                <td><p><input type="text" id="from_address" value="Seattle"> <button id="get">検索</button></p></td>
+                <!-- <td><input type="text" name="PickupLocation" id="PickupLocation"></td> -->
+                <!-- <td><input type="text" name="PickupLocation" id="PickupLocation"></td> -->
               </tr>
 
-              <div>
-                <select name="Size">
-                    {{range .Size}}
-                        <option value="{{.ID}}">{{.Name}}</option>
-                    {{end}}
-                </select>
-              </div>  
+              <h1>Directions Input Panel</h1>
+      <!-- MAP[START] -->
+
+              <div class="directionsContainer">
+                <div id="directionsPanel"></div>
+                <div id="directionsItinerary"></div>
+              </div>
+
+
+              <div id="main">
+                <div id="myMap" style='width:100%;height:90%;'></div>
+              </div>
+
+                <br>
+
+              <tr>
+                <!-- <th>着荷場所__</th> -->
+                <th><label for="point2">着荷場所_住所:</label></th>
+                <td><input type="text" id="point2" name="point2"></td>
+                <!-- <td><input type="text" name="ArrivalLocation" id="ArrivalLocation"></td> -->
+              </tr>
+
+
+              <!-- <input type="button" value="Calculate Distance" onclick="calculateDistance()"> -->
+              <p id="distance">ここに距離が出ます</p>
 
 
               <tr>
                 <th>車格__</th>
                 <td><select name="TruckSize" id="TruckSize">
                     <option value="" name="none">選択してください</option>
-                    <option value="{{ .TruckSizeSmall }}">{{ .TruckSizeSmall }}</option>
-                    <option value="{{ .TruckSizeTowTon }}">{{ .TruckSizeTowTon }}</option>
-                    <option value="{{ .TruckSizeFourTon }}">{{ .TruckSizeFourTon }}</option>
-                    <option value="{{ .TruckSizeTenTon }}">{{ .TruckSizeTenTon }}</option>
+                    <option value= 1 >{{ .TruckSizeSmall }}</option>
+                    <option value= 2 >{{ .TruckSizeTowTon }}</option>
+                    <option value= 3 >{{ .TruckSizeFourTon }}</option>
+                    <option value= 4 >{{ .TruckSizeTenTon }}</option>
                   </select></td>
               </tr>
 
-              <!-- <tr>
-                <th>希望料金__</th>
-                <td><input size="20" type="text" name="Price" /></td>
-              </tr>  -->
+              <tr>
+                <th>料金__</th>
+                <td><input size="20" type="text" name="Price" id="Price"/></td>
+              </tr> 
 
               <tr>
                 <th>発注日__</th>
@@ -124,22 +104,140 @@
       </div>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+  <script src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AokHgh1grGCr3EDpuzGtpVGzME_umX7tE4TZqtjwd2yX4kyeVdRR71-FMiWzmJJg' async defer></script>
   <script type="text/javascript">
+    let map;             //MapObject用
+    let searchManager;   //SearchObject用
+      //検索モジュール指定
+
+    function GetMap() {
+      map = new Microsoft.Maps.Map('#myMap', {
+          center: new Microsoft.Maps.Location(47.6149, -122.1941),
+         zoom: 15,
+          mapTypeId: Microsoft.Maps.MapTypeId.aerial
+      });
+      //Load the directions module.
+      // Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+      //   //Create an instance of the directions manager.
+      //     directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+
+      //   //Specify where to display the route instructions.
+      //     directionsManager.setRenderOptions({itineraryContainer: '#directionsItinerary'});
+
+      //   //Specify the where to display the input panel
+      //     directionsManager.showInputPanel('directionsPanel');
+      // });
+      Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+            //searchManagerインスタンス化（Geocode,ReverseGeocodeが使用可能になる）
+            searchManager = new Microsoft.Maps.Search.SearchManager(map);
+            //Geocode：住所から検索
+            // geocodeQuery(document.getElementById("from_address").value);
+        });
+    }
+
+    /** 検索ボタン[Click:Event]*/
+    document.getElementById("get").onclick = function(){
+        //4.Geocode:住所から検索
+        geocodeQuery(document.getElementById("from_address").value);
+        // console.log(geocodeQuery(document.getElementById("from_address").value));
+    };
+
+
+    // $("#get").on("click",function(){
+    //     console.log("OK_address");
+
+    //     const adress = geocodeQuery(document.getElementById("from_address").value);
+    //     console.log(adress)
+    // });
+    /*** 住所から緯度経度を取得
+     * @param query [住所文字列]
+     */
+     function geocodeQuery(query) {
+        if(searchManager) {
+            //住所から緯度経度を検索
+            searchManager.geocode({
+                where: query,       //検索文字列
+                callback: function (r) { //検索結果を"( r )" の変数で取得
+                    //最初の検索取得結果をMAPに表示
+                    console.log("here")
+                    if (r && r.results && r.results.length > 0) {
+                        //Pushpinを立てる
+                        // const pin = new Microsoft.Maps.Pushpin(r.results[0].location);
+                        // map.entities.push(pin);
+                        //map表示位置を再設定
+                        // map.setView({ bounds: r.results[0].bestView});
+                        //取得た緯度経度をh1要素にJSON文字列にして表示
+                        console.log("here")
+                        console.log(r.results[0].location);
+                        document.getElementById("h1").innerText = JSON.stringify(r.results[0].location);
+                    }
+                },
+                errorCallback: function (e) {
+                    console.log(e)
+                    alert("見つかりません");
+                }
+            });
+        }
+    }
+
+
+
+
       $("#runSet").on("click",function(){
         console.log("OK");
 
         let data = {
           "UserID": Number(document.getElementById('UserID').value),
-          "TruckTypeID": Number(document.getElementById('TruckTypeID').value),
-          // "TruckSizeID": Number(document.getElementById('TruckSizeID').value),
           "PickupDatetime":new Date(document.getElementById('PickupDatetime').value),
           "ArrivalDatetime":new Date(document.getElementById('ArrivalDatetime').value),
+          "PickupLocation":document.getElementById('point1').value,
+          "ArrivalLocation":document.getElementById('point2').value,
           "OrderDatetime":document.getElementById('OrderDatetime').value,
-
-          "TruckSize":document.getElementById('TruckSize').value,
+          "TruckSize":Number(document.getElementById('TruckSize').value),
+          "Price":document.getElementById('Price').value,
           }
           
         console.log(data);  
+
+        
+
+        // 住所取得
+        const adress_params={
+          "CountryRegion":
+          
+
+        }
+
+
+
+        // 距離算出
+        const point1 = document.getElementById("point1").value;
+        const point2 = document.getElementById("point2").value;
+        const url = "https://dev.virtualearth.net/REST/v1/Routes/DistanceMatrix";
+        const params = {
+          "origins": "37.779160067439079,-122.42004945874214",
+          "destinations": "32.715685218572617,-117.16172486543655",
+          "travelMode": "driving",
+          "key": "AokHgh1grGCr3EDpuzGtpVGzME_umX7tE4TZqtjwd2yX4kyeVdRR71-FMiWzmJJg"
+        };
+
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url + "?" + new URLSearchParams(params).toString());
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          var distance = response.resourceSets[0].resources[0].results[0].travelDistance;
+          console.log(distance);
+          document.getElementById("distance").innerHTML = "The distance between the two points is " + (distance / 1609.34).toFixed(2) + " miles.";
+        }
+        console.log(response);
+        console.log(distance);
+
+      };
+      xhr.send();
+
+
 
 
       $.ajax({
@@ -155,6 +253,7 @@
             //     alert(error);
             // }
         });
+
       })
     // };
 

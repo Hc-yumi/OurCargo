@@ -20,19 +20,15 @@ import (
 	_ "gorm.io/gorm"
 )
 
-type TruckSizeContent struct {
-	TruckSize string `json:"TruckSize"`
-}
-
 type OrderContent struct {
 	UserID          int    `json:"UserID"`
-	TruckTypeID     int    `json:"TruckTypeID"`
-	TruckSize       int    `json:"TruckSize"`
+	TruckSizeID     int    `json:"TruckSize"`
 	PickupDatetime  string `json:"PickupDatetime"`
 	ArrivalDatetime string `json:"ArrivalDatetime"`
-	// truck_size_id   int       `form:"TruckSize"`
-	// truck_type_id   int       `form:"Price"`
-	OrderDatetime string `json:"OrderDatetime"`
+	PickupLocation  string `json:"PickupLocation"`
+	ArrivalLocation string `json:"ArrivalLocation"`
+	OrderDatetime   string `json:"OrderDatetime"`
+	Price           string `json:"Price"`
 }
 
 var db *gorm.DB
@@ -63,7 +59,6 @@ func main() {
 
 	// form を送る
 	r.POST("/orderpage", func(c *gin.Context) {
-
 		var order OrderContent
 		if err := c.ShouldBind(&order); err != nil {
 			fmt.Print(err.Error())
@@ -71,37 +66,21 @@ func main() {
 			return
 		}
 
-		var sizeRecord dao.TruckSize
-		dbc := db.Where("truck_size=?", order.TruckSize).First(&sizeRecord)
-		if dbc.Error != nil {
-			fmt.Print(dbc.Error)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
-			return
-		}
-
-		var typeRecord dao.TruckSize
-		dbc := db.Where("truck_type=?", order.TruckType).First(&typeRecord)
-		if dbc.Error != nil {
-			fmt.Print(dbc.Error)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
-			return
-		}
-
-		Layout := "2006-01-02T15:04"
+		Layout := "2006-01-02T15:04:00.000Z"
 		Layout_day := "2006-01-02"
 		Pt, err := time.Parse(Layout, order.PickupDatetime)
 		At, err := time.Parse(Layout, order.ArrivalDatetime)
 		Ot, err := time.Parse(Layout_day, order.OrderDatetime)
 
 		newRecord := dao.Order{
-			UserID:         order.UserID,
-			TruckTypeID:    order.TruckType{ID: typeRecord.ID},
-			TruckSize:      dao.TruckSize{ID: sizeRecord.ID},
-			PickupDatetime: Pt,
-			// PickupDatetime: order.PickupDatetime,
+			UserID:          order.UserID,
+			PickupDatetime:  Pt,
 			ArrivalDatetime: At,
-			// ArrivalDatetime: order.ArrivalDatetime,
-			OrderDatetime: Ot,
+			OrderDatetime:   Ot,
+			PickupLocation:  order.PickupLocation,
+			ArrivalLocation: order.ArrivalLocation,
+			TruckSizeID:     order.TruckSizeID,
+			Price:           order.Price,
 		}
 
 		if err != nil {
@@ -179,22 +158,6 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
 	// http.ListenAndServe(":80", nil)
 }
-
-// func getProfile(userID string) (*http.Response, []error) {
-// 	request := client.Get("https://api.line.me/v2/bot/profile").
-// 		Query("user_id="+userID).
-// 		Set("Authorization", "Bearer "+"ckF2YVNKOFIHq/z83vtF+CspJaiEFTO/mAeBzN+FvY2LUb6OzlDy56nOQUv8GfZrZLiik9YZxHnCEhCbq/PHM8JY5pekcYGDcB2wN2h6oCGUub5Pv5ijC1CK+osVCpgvi1SavlLseym2rxC6vlHQ3QdB04t89/1O/w1cDnyilFU=")
-// 	response, body, errs := request.End()
-
-// 	return response, errs
-// }
-
-// func parseProfile(response *http.Response) (*UserProfile, error) {
-// 	userProfile := &UserProfile{}
-// 	err := json.NewDecoder(response.Body).Decode(userProfile)
-// 	if err != nil {
-// 		return nil, err
-// 	}
 
 // 	return userProfile, nil
 // }
