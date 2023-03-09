@@ -67,6 +67,7 @@
 
               <!-- <input type="button" value="Calculate Distance" onclick="calculateDistance()"> -->
               <p id="distance">ここに距離が出ます</p>
+              <p id="show_address">ここに住所が出ます</p>
 
 
               <tr>
@@ -202,11 +203,31 @@
         
 
         // 住所取得
-        const adress_params={
-          "CountryRegion":
-          
 
-        }
+        const address_url =" https://dev.virtualearth.net/REST/v1/Locations"
+        const address_params = {
+          "CountryRegion":"JP",
+          "PostalCode":"130011",
+          "AdminDistrict":"東京都",
+          "Locality":"墨田区",
+          "AddressLine":"石原2丁目8-25",
+          "key": "AokHgh1grGCr3EDpuzGtpVGzME_umX7tE4TZqtjwd2yX4kyeVdRR71-FMiWzmJJg"
+        };
+
+        var xhr = new XMLHttpRequest();
+          xhr.open("GET", url + "?" + new URLSearchParams(paddress_params).toString());
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              var response = JSON.parse(xhr.responseText);
+              // var distance = response.resourceSets[0].resources[0].results[0].travelDistance;
+              var address = response.resourceSets[0].resources[0].results[0].bbox;
+              console.log(address);
+              document.getElementById("show_address").innerHTML = "The address is " + address;
+            }
+            console.log(response);
+
+          };
+          xhr.send();
 
 
 
