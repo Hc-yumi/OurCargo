@@ -37,7 +37,7 @@
                 <h1>ここに表示</h1>
                 <th><label for="point1">集荷場所_住所:</label></th>
                 <td><input type="text" id="point1" name="point1"></td>
-                <td><p><input type="text" id="from_address" value="Seattle"> <button id="get">検索</button></p></td>
+                <!-- <td><p><input type="text" id="from_address" value="Seattle"> <button id="get">検索</button></p></td> -->
                 <!-- <td><input type="text" name="PickupLocation" id="PickupLocation"></td> -->
                 <!-- <td><input type="text" name="PickupLocation" id="PickupLocation"></td> -->
               </tr>
@@ -67,7 +67,8 @@
 
               <!-- <input type="button" value="Calculate Distance" onclick="calculateDistance()"> -->
               <p id="distance">ここに距離が出ます</p>
-              <p id="show_address">ここに住所が出ます</p>
+              <p id="show_address_pick">ここに集荷先郵便番号が出ます</p>
+              <p id="show_address_arr">ここに着荷先郵便番号が出ます</p>
 
 
               <tr>
@@ -111,37 +112,39 @@
     let searchManager;   //SearchObject用
       //検索モジュール指定
 
-    function GetMap() {
-      map = new Microsoft.Maps.Map('#myMap', {
-          center: new Microsoft.Maps.Location(47.6149, -122.1941),
-         zoom: 15,
-          mapTypeId: Microsoft.Maps.MapTypeId.aerial
-      });
-      //Load the directions module.
-      // Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
-      //   //Create an instance of the directions manager.
-      //     directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+    // function GetMap() {
+    //   map = new Microsoft.Maps.Map('#myMap', {
+    //       center: new Microsoft.Maps.Location(47.6149, -122.1941),
+    //      zoom: 15,
+    //       mapTypeId: Microsoft.Maps.MapTypeId.aerial
+    //   });
+    //   //Load the directions module.
+    //   // Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+    //   //   //Create an instance of the directions manager.
+    //   //     directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 
-      //   //Specify where to display the route instructions.
-      //     directionsManager.setRenderOptions({itineraryContainer: '#directionsItinerary'});
+    //   //   //Specify where to display the route instructions.
+    //   //     directionsManager.setRenderOptions({itineraryContainer: '#directionsItinerary'});
 
-      //   //Specify the where to display the input panel
-      //     directionsManager.showInputPanel('directionsPanel');
-      // });
-      Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
-            //searchManagerインスタンス化（Geocode,ReverseGeocodeが使用可能になる）
-            searchManager = new Microsoft.Maps.Search.SearchManager(map);
-            //Geocode：住所から検索
-            // geocodeQuery(document.getElementById("from_address").value);
-        });
-    }
+    //   //   //Specify the where to display the input panel
+    //   //     directionsManager.showInputPanel('directionsPanel');
+    //   // });
+    //   Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+    //         //searchManagerインスタンス化（Geocode,ReverseGeocodeが使用可能になる）
+    //         searchManager = new Microsoft.Maps.Search.SearchManager(map);
+    //         //Geocode：住所から検索
+    //         // geocodeQuery(document.getElementById("from_address").value);
+    //     });
+    // }
 
-    /** 検索ボタン[Click:Event]*/
-    document.getElementById("get").onclick = function(){
-        //4.Geocode:住所から検索
-        geocodeQuery(document.getElementById("from_address").value);
-        // console.log(geocodeQuery(document.getElementById("from_address").value));
-    };
+    // /** 検索ボタン[Click:Event]*/
+    // document.getElementById("get").onclick = function(){
+    //     //4.Geocode:住所から検索
+    //     geocodeQuery(document.getElementById("from_address").value);
+    //     // console.log(geocodeQuery(document.getElementById("from_address").value));
+    // };
+
+
 
 
     // $("#get").on("click",function(){
@@ -153,39 +156,37 @@
     /*** 住所から緯度経度を取得
      * @param query [住所文字列]
      */
-     function geocodeQuery(query) {
-        if(searchManager) {
-            //住所から緯度経度を検索
-            searchManager.geocode({
-                where: query,       //検索文字列
-                callback: function (r) { //検索結果を"( r )" の変数で取得
-                    //最初の検索取得結果をMAPに表示
-                    console.log("here")
-                    if (r && r.results && r.results.length > 0) {
-                        //Pushpinを立てる
-                        // const pin = new Microsoft.Maps.Pushpin(r.results[0].location);
-                        // map.entities.push(pin);
-                        //map表示位置を再設定
-                        // map.setView({ bounds: r.results[0].bestView});
-                        //取得た緯度経度をh1要素にJSON文字列にして表示
-                        console.log("here")
-                        console.log(r.results[0].location);
-                        document.getElementById("h1").innerText = JSON.stringify(r.results[0].location);
-                    }
-                },
-                errorCallback: function (e) {
-                    console.log(e)
-                    alert("見つかりません");
-                }
-            });
-        }
-    }
-
-
+    //  function geocodeQuery(query) {
+    //     if(searchManager) {
+    //         //住所から緯度経度を検索
+    //         searchManager.geocode({
+    //             where: query,       //検索文字列
+    //             callback: function (r) { //検索結果を"( r )" の変数で取得
+    //                 //最初の検索取得結果をMAPに表示
+    //                 console.log("here")
+    //                 if (r && r.results && r.results.length > 0) {
+    //                     //Pushpinを立てる
+    //                     // const pin = new Microsoft.Maps.Pushpin(r.results[0].location);
+    //                     // map.entities.push(pin);
+    //                     //map表示位置を再設定
+    //                     // map.setView({ bounds: r.results[0].bestView});
+    //                     //取得た緯度経度をh1要素にJSON文字列にして表示
+    //                     console.log("here")
+    //                     console.log(r.results[0].location);
+    //                     document.getElementById("h1").innerText = JSON.stringify(r.results[0].location);
+    //                 }
+    //             },
+    //             errorCallback: function (e) {
+    //                 console.log(e)
+    //                 alert("見つかりません");
+    //             }
+    //         });
+    //     }
+    // }
 
 
       $("#runSet").on("click",function(){
-        console.log("OK");
+        // console.log("OK");
 
         let data = {
           "UserID": Number(document.getElementById('UserID').value),
@@ -198,67 +199,113 @@
           "Price":document.getElementById('Price').value,
           }
           
-        console.log(data);  
+        // console.log(data);  
 
-        
+        const address_url ="https://dev.virtualearth.net/REST/v1/Locations?"
 
-        // 住所取得
-
-        const address_url =" https://dev.virtualearth.net/REST/v1/Locations"
-        const address_params = {
+        // 住所取得 pickup
+        const address_params_pick = {
           "CountryRegion":"JP",
-          "PostalCode":"130011",
+          "PostalCode":"1300011",
           "AdminDistrict":"東京都",
           "Locality":"墨田区",
           "AddressLine":"石原2丁目8-25",
           "key": "AokHgh1grGCr3EDpuzGtpVGzME_umX7tE4TZqtjwd2yX4kyeVdRR71-FMiWzmJJg"
         };
 
-        var xhr = new XMLHttpRequest();
-          xhr.open("GET", url + "?" + new URLSearchParams(paddress_params).toString());
-          xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-              var response = JSON.parse(xhr.responseText);
-              // var distance = response.resourceSets[0].resources[0].results[0].travelDistance;
-              var address = response.resourceSets[0].resources[0].results[0].bbox;
-              console.log(address);
-              document.getElementById("show_address").innerHTML = "The address is " + address;
+          let geolcation_pickup ;
+          var xhr_pic = new XMLHttpRequest();
+          xhr_pic.open("GET", address_url + "?" + new URLSearchParams(address_params_pick).toString());
+          xhr_pic.onreadystatechange = function() {
+            if (xhr_pic.readyState === 4 && xhr_pic.status === 200) {
+              var response = JSON.parse(xhr_pic.responseText);
+              console.log(response);
+              let lat = response.resourceSets[0].resources[0].bbox[0];
+              // console.log(lat);
+              let lon = response.resourceSets[0].resources[0].bbox[1];
+              geolcation_pickup = lat+","+lon;
+              // console.log(geolcation_pickup);
+              // geolcation_pickup = [lat,lon];
+              // let pickup= geolcation_arrival.toString();
+              // console.log(pickup);
+              document.getElementById("show_address_pick").innerHTML = "The address is " + geolcation_pickup;
             }
-            console.log(response);
-
           };
-          xhr.send();
+          xhr_pic.send();
 
 
-
-        // 距離算出
-        const point1 = document.getElementById("point1").value;
-        const point2 = document.getElementById("point2").value;
-        const url = "https://dev.virtualearth.net/REST/v1/Routes/DistanceMatrix";
-        const params = {
-          "origins": "37.779160067439079,-122.42004945874214",
-          "destinations": "32.715685218572617,-117.16172486543655",
-          "travelMode": "driving",
+        // 住所取得 arrival
+        // const address2_url ="https://dev.virtualearth.net/REST/v1/Locations?"
+        const address_params_arr = {
+          "CountryRegion":"JP",
+          "PostalCode":"1350051",
+          "AdminDistrict":"東京都",
+          "Locality":"江東区",
+          "AddressLine":"枝川3丁目10-10",
           "key": "AokHgh1grGCr3EDpuzGtpVGzME_umX7tE4TZqtjwd2yX4kyeVdRR71-FMiWzmJJg"
         };
 
+        let geolcation_arrival;
 
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", url + "?" + new URLSearchParams(params).toString());
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          var response = JSON.parse(xhr.responseText);
-          var distance = response.resourceSets[0].resources[0].results[0].travelDistance;
-          console.log(distance);
-          document.getElementById("distance").innerHTML = "The distance between the two points is " + (distance / 1609.34).toFixed(2) + " miles.";
-        }
-        console.log(response);
-        console.log(distance);
+        var xhr_arr = new XMLHttpRequest();
+        xhr_arr.open("GET", address_url + "?" + new URLSearchParams(address_params_arr).toString());
+        xhr_arr.onreadystatechange = function() {
+          
+          if (xhr_arr.readyState === 4 && xhr_arr.status === 200) {
+            var response = JSON.parse(xhr_arr.responseText);
 
-      };
-      xhr.send();
+            let lat = response.resourceSets[0].resources[0].bbox[0];
+            let lon = response.resourceSets[0].resources[0].bbox[1];
+            geolcation_arrival =lat+","+lon;
+            console.log(geolcation_arrival);
+            // geolcation_arrival=[lat,lon];
+            // let arrival= geolcation_arrival.toString();
+
+            document.getElementById("show_address_arr").innerHTML = "The address is " + geolcation_arrival;
+          }
+        };
+        xhr_arr.send();
+
+      
+        // 距離算出
+        // const point1 = document.getElementById("point1").value;
+        // const point2 = document.getElementById("point2").value;
+        // const url = "https://dev.virtualearth.net/REST/v1/Routes/DistanceMatrix";
+        // setTimeout(function(){
+        //     console.log("Executed after 1 second");
+        // }, 2000);
+        setTimeout(function() {
+          const url = "https://dev.virtualearth.net/REST/v1/Routes/Driving";
+          const params = {
+          
+            "key": "AokHgh1grGCr3EDpuzGtpVGzME_umX7tE4TZqtjwd2yX4kyeVdRR71-FMiWzmJJg",
+
+            // "wp.0": "35.69412258998473,139.79417469323346",
+            "wp.0": geolcation_pickup,
+
+            // "wp.1": "35.79412258998473,139.79418469323346",
+            "wp.1": geolcation_arrival,
+          };
+          console.log(params);
 
 
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", url + "?" + new URLSearchParams(params).toString());
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              var response = JSON.parse(xhr.responseText);
+              console.log(response);
+              var distance = response.resourceSets[0].resources[0].routeLegs[0].travelDistance;
+              
+              // document.getElementById("distance").innerHTML = "The distance between the two points is " + (distance / 1609.34).toFixed(2) + " miles.";
+              document.getElementById("distance").innerHTML = "The distance between the two points is " + (distance).toFixed(2) + " km";
+            }
+            // console.log(response);
+            console.log(distance);
+
+          };
+          xhr.send();
+        }, 1000);
 
 
       $.ajax({
@@ -266,7 +313,7 @@
             url: 'https://ourcargo-platform.com/orderpage',
             contentType: 'application/json',
             data: JSON.stringify(data),  // access in body
-            success: alert("success"),
+            // success: alert("success"),
                 // window.location.href = 'http://localhost:8080/showpage'; // 通常の遷移
                 // window.open('http://localhost:8080/showpage', '_blank');
             // error: function (request, status, error) {

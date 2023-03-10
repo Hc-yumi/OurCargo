@@ -39,7 +39,11 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
 	r.Static("/static", "./static")
-	dsn := "host=myrds.c8eoe8ahfumy.ap-northeast-1.rds.amazonaws.com user=postgres password=Hach8686 dbname=test port=5432 sslmode=disable TimeZone=Asia/Tokyo"
+	// ec2使用時↓
+	// dsn := "host=myrds.c8eoe8ahfumy.ap-northeast-1.rds.amazonaws.com user=postgres password=Hach8686 dbname=test port=5432 sslmode=disable TimeZone=Asia/Tokyo"
+
+	// local環境
+	dsn := "host=localhost user=postgres password=Hach8686 dbname=test port=5432 sslmode=disable TimeZone=Asia/Tokyo"
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	bot, err := linebot.New("07b57cd44f406d7426002ddde26f8510", "ckF2YVNKOFIHq/z83vtF+CspJaiEFTO/mAeBzN+FvY2LUb6OzlDy56nOQUv8GfZrZLiik9YZxHnCEhCbq/PHM8JY5pekcYGDcB2wN2h6oCGUub5Pv5ijC1CK+osVCpgvi1SavlLseym2rxC6vlHQ3QdB04t89/1O/w1cDnyilFU=")
@@ -143,15 +147,23 @@ func main() {
 
 	})
 
-	fmt.Println("server is running at port 443")
+	fmt.Println("server is running at local")
 
-	if err := r.RunTLS(
-		":443",
-		"/etc/letsencrypt/live/ourcargo-platform.com/fullchain.pem",
-		"/etc/letsencrypt/live/ourcargo-platform.com/privkey.pem",
-	); err != nil {
-		fmt.Println(err.Error())
-	}
+	// EC2使用時↓
+	// if err := r.RunTLS(
+	// 	":443",
+	// 	"/etc/letsencrypt/live/ourcargo-platform.com/fullchain.pem",
+	// 	"/etc/letsencrypt/live/ourcargo-platform.com/privkey.pem",
+	// ); err != nil {
+	// 	fmt.Println(err.Error())
+	// }
+
+
+	// local使用時↓
+	// http.ListenAndServe(":8080", nil)
+	fmt.Println("server is up")
+	r.Run(":8080")
+
 }
 
 func HelloServer(w http.ResponseWriter, r *http.Request) {
