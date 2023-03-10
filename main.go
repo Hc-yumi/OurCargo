@@ -35,14 +35,18 @@ var db *gorm.DB
 var err error
 
 func main() {
-	// gin.DefaultWriter = colorable.NewColorableStdout()
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
 	r.Static("/static", "./static")
-	dsn := "host=myrds.c8eoe8ahfumy.ap-northeast-1.rds.amazonaws.com user=postgres password=Hach8686 dbname=test port=5432 sslmode=disable TimeZone=Asia/Tokyo"
+	// ec2使用時↓
+	// dsn := "host=myrds.c8eoe8ahfumy.ap-northeast-1.rds.amazonaws.com user=postgres password=Hach8686 dbname=test port=5432 sslmode=disable TimeZone=Asia/Tokyo"
+
+	// local環境
+	dsn := "host=localhost user=postgres password=Hach8686 dbname=test port=5432 sslmode=disable TimeZone=Asia/Tokyo"
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	bot, err := linebot.New("07b57cd44f406d7426002ddde26f8510", "ckF2YVNKOFIHq/z83vtF+CspJaiEFTO/mAeBzN+FvY2LUb6OzlDy56nOQUv8GfZrZLiik9YZxHnCEhCbq/PHM8JY5pekcYGDcB2wN2h6oCGUub5Pv5ijC1CK+osVCpgvi1SavlLseym2rxC6vlHQ3QdB04t89/1O/w1cDnyilFU=")
+	// ↓bot通知を出すときに使う↓
 	// if _, err := bot.PushMessage("Udc51e4d955763ca7cae7e5c9ed5e8bde", linebot.NewTextMessage("https://ourcargo-platform.com/orderpage")).Do(); err != nil {
 	// 	fmt.Println(err.Error())
 	// }
@@ -94,7 +98,6 @@ func main() {
 			return
 		}
 
-		// DBへの保存が成功したら結果を表示するページに戻るために/showpageのAPIを内部で読んでそちらでページの表示を行う。
 		location := url.URL{Path: "/"}
 		c.Redirect(http.StatusFound, location.RequestURI())
 	})
@@ -102,7 +105,6 @@ func main() {
 	r.POST("/callback", func(c *gin.Context) {
 		if err != nil {
 			fmt.Println(err.Error())
-			// c.HTML(http.StatusOK, gin.H{"error": "invalid argument"})
 		}
 
 		req := c.Request
@@ -143,21 +145,23 @@ func main() {
 
 	})
 
-	fmt.Println("server is running at port 443")
+	fmt.Println("server is running at local")
 
-	if err := r.RunTLS(
-		":443",
-		"/etc/letsencrypt/live/ourcargo-platform.com/fullchain.pem",
-		"/etc/letsencrypt/live/ourcargo-platform.com/privkey.pem",
-	); err != nil {
-		fmt.Println(err.Error())
-	}
+	// EC2使用時↓
+	// if err := r.RunTLS(
+	// 	":443",
+	// 	"/etc/letsencrypt/live/ourcargo-platform.com/fullchain.pem",
+	// 	"/etc/letsencrypt/live/ourcargo-platform.com/privkey.pem",
+	// ); err != nil {
+	// 	fmt.Println(err.Error())
+	// }
+
+	// local使用時↓
+	fmt.Println("server is up")
+	r.Run(":8080")
 }
 
 func HelloServer(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
 	// http.ListenAndServe(":80", nil)
 }
-
-// 	return userProfile, nil
-// }
