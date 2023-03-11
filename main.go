@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	// "log"
@@ -21,14 +22,15 @@ import (
 )
 
 type OrderContent struct {
-	UserID          int    `json:"UserID"`
-	TruckSizeID     int    `json:"TruckSize"`
-	PickupDatetime  string `json:"PickupDatetime"`
-	ArrivalDatetime string `json:"ArrivalDatetime"`
-	PickupLocation  string `json:"PickupLocation"`
-	ArrivalLocation string `json:"ArrivalLocation"`
-	OrderDatetime   string `json:"OrderDatetime"`
-	Price           string `json:"Price"`
+	UserID          int      `json:"UserID"`
+	TruckSizeID     int      `json:"TruckSize"`
+	PickupDatetime  string   `json:"PickupDatetime"`
+	ArrivalDatetime string   `json:"ArrivalDatetime"`
+	PickupLocation  []string `json:"PickupLocation"`
+	ArrivalLocation []string `json:"ArrivalLocation"`
+	OrderDatetime   string   `json:"OrderDatetime"`
+	Price           string   `json:"Price"`
+	Mileage         string   `json:"Distance"`
 }
 
 var db *gorm.DB
@@ -75,16 +77,19 @@ func main() {
 		Pt, err := time.Parse(Layout, order.PickupDatetime)
 		At, err := time.Parse(Layout, order.ArrivalDatetime)
 		Ot, err := time.Parse(Layout_day, order.OrderDatetime)
+		PL := strings.Join(order.PickupLocation, "/")
+		AL := strings.Join(order.ArrivalLocation, "/")
 
 		newRecord := dao.Order{
 			UserID:          order.UserID,
 			PickupDatetime:  Pt,
 			ArrivalDatetime: At,
 			OrderDatetime:   Ot,
-			PickupLocation:  order.PickupLocation,
-			ArrivalLocation: order.ArrivalLocation,
+			PickupLocation:  PL,
+			ArrivalLocation: AL,
 			TruckSizeID:     order.TruckSizeID,
 			Price:           order.Price,
+			Mileage:         order.Mileage,
 		}
 
 		if err != nil {
