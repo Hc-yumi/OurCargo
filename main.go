@@ -30,7 +30,21 @@ type OrderContent struct {
 	ArrivalLocation []string `json:"ArrivalLocation"`
 	OrderDatetime   string   `json:"OrderDatetime"`
 	Price           string   `json:"Price"`
-	Mileage         string   `json:"Distance"`
+	Mileage         int      `json:"Mileage"`
+}
+
+type CompanyContent struct {
+	CompanyName     string   `json:"CompanyName"`
+	CompanyLocation []string `json:"CompanyAddress"`
+}
+
+type UserContent struct {
+	LINEID    string `json:"LINEID"`
+	UserName  string `json:"UserName"`
+	CompanyID int    `json:"CompanyID"`
+	Role      string `json:"Role"`
+	Email     string `json:"Email"`
+	Tel       string `json:"Tel"`
 }
 
 var db *gorm.DB
@@ -107,6 +121,84 @@ func main() {
 		c.Redirect(http.StatusFound, location.RequestURI())
 	})
 
+	// 会社登録　//
+	r.GET("/company", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "company.html", gin.H{})
+	})
+
+	r.POST("/company", func(c *gin.Context) {
+		var company CompanyContent
+		if err := c.ShouldBind(&company); err != nil {
+			fmt.Print(err.Error())
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid argument"})
+			return
+		}
+
+		CL := strings.Join(company.CompanyLocation, "/")
+
+		companyRecord := dao.Company{
+			CompanyName:     company.CompanyName,
+			CompanyLocation: CL,
+		}
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		dbc := db.Create(&companyRecord)
+		if dbc.Error != nil {
+			fmt.Print(dbc.Error)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			return
+		}
+		// c.HTML(http.StatusOK, "registeredCompany.html", gin.H{"companyname": company.CompanyName})
+
+		// location := url.URL{Path: "/user"}
+		// c.Redirect(http.StatusFound, location.RequestURI())
+	})
+
+	// user登録　//
+	r.GET("/user", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "user.html", gin.H{})
+	})
+
+	r.POST("/user_register", func(c *gin.Context) {
+		var user UserContent
+		if err := c.ShouldBind(&user); err != nil {
+			fmt.Print(err.Error())
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid argument"})
+			return
+		}
+
+		userRecord := dao.User{
+			LineID:    user.LINEID,
+			Name:      user.UserName,
+			CompanyID: user.CompanyID,
+			Role:      user.Role,
+			Email:     user.Email,
+			Tel:       user.Tel,
+		}
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		dbc := db.Create(&userRecord)
+		if dbc.Error != nil {
+			fmt.Print(dbc.Error)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			return
+		}
+
+		c.HTML(http.StatusOK, "registered.html", gin.H{"message": user.UserName})
+	})
+
+	// 登録確認画面　//
+	r.GET("/registered", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "registered.html", gin.H{})
+	})
+
+	// LINE機能
 	r.POST("/callback", func(c *gin.Context) {
 		if err != nil {
 			fmt.Println(err.Error())

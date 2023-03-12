@@ -57,6 +57,6 @@ type Order struct {
 	ArrivalLocation string
 	PickupDatetime  time.Time
 	ArrivalDatetime time.Time
-	Mileage         string
+	Mileage         int
 	OrderDatetime   time.Time
 }

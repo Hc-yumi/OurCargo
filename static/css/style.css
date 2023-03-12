@@ -47,16 +47,16 @@ html {
   /*----リセットcss*----/
   
   /*デザインcss↓*/
-  .box_con {
+  /* .box_con {
     max-width: 900px;
     margin: 0  auto;
-  }
+  } */
   @media only screen and (max-width: 768px) {
     .box_con {
       width: 95%;
     }
   }
-  .box_con form {
+  /* .box_con form {
     width: 100%;
   }
   .box_con form table {
@@ -64,8 +64,8 @@ html {
   }
   .box_con form table tr {
     position: relative;
-  }
-  .box_con form table tr:after {
+  } */
+  /* .box_con form table tr:after {
     content: "";
     position: absolute;
     width: 100%;
@@ -73,25 +73,25 @@ html {
     bottom: 0;
     height: 1px;
     border-bottom: dotted #cdcdcd 1px;
-  }
-  .box_con form table tr th {
+  } */
+  /* .box_con form table tr th {
     width: 30%;
     font-weight: normal;
     padding: 1em .5em;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-  }
-  @media only screen and (max-width: 768px) {
+  } */
+  /* @media only screen and (max-width: 768px) {
     .box_con form table tr th {
       text-align: center;
       width: 100%;
       display: block;
       background: #97ae88;
       padding: .8em .2em;
-      color: #fff;
-    }
-  }
+      color: #fff; */
+    /* } */
+  /* } */
   .box_con form table tr th span {
     background: #cd6f55;
     padding: 0 .3em;

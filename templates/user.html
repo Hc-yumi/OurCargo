@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザー登録</title>
+</head>
+<body>
+    <h1>ユーザー登録</h1>
+
+    <p>はじめに会社登録をしてから進んでください</p>
+    <a href="http://localhost:8080/company">会社登録画面へ</a>
+
+    <table>
+        <tr>
+            <th>LINE ID</th>
+            <td><input type="text" name="LINEID" id="LINEID"></td>
+        </tr>
+
+        <tr>
+            <th>お名前</th>
+            <td><input type="text" name="username" id="username"></td>
+        </tr>
+
+        <tr>
+            <th>会社ID</th>
+            <td><input type="text" name="CompanyID" id="CompanyID"></td>
+        </tr>
+
+        <tr>
+            <th>発注元 or 発注先</th>
+            <td><select name="Role" id="Role">
+                <option value="" name="none">選択してください</option>
+                <option value="発注元">発注元</option>
+                <option value="発注先">発注先</option>
+              </select></td>
+            </td>
+
+          
+        </tr>
+
+        <tr>
+            <th>Email</th>
+            <td><input type="email" name="Email" id="Email"></td>
+        </tr>
+
+        <tr>
+            <th>電話番号</th>
+            <td><input type="tel" name="tel" id="tel"></td>
+        </tr>
+
+    </table>
+
+    <p class="btn">
+        <span><input type="submit" value="送信" id="userset"/></span>
+    </p>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+    <script type="text/javascript">
+        $("#userset").on("click",function(){
+
+            let userdata={
+                "LINEID":document.getElementById('LINEID').value,
+                "UserName":document.getElementById('username').value,
+                "CompanyID":Number(document.getElementById('CompanyID').value),
+                "Role":document.getElementById('Role').value,
+                "Email":document.getElementById('Email').value,
+                "Tel":document.getElementById('tel').value,
+            }
+
+            $.ajax({
+                type: 'POST',
+                // url: 'https://ourcargo-platform.com/user', EC2 deploy時に使用
+                url: 'http://localhost:8080/user_register',
+                contentType: 'application/json',
+                data: JSON.stringify(userdata),  // access in body
+                
+                success: function(msg) {
+                // alert("success");
+                window.location.href = 'http://localhost:8080/registered'; // 通常の遷移
+                window.open('http://localhost:8080/registered', '_blank');
+                },
+
+                error: function (request, status, error) {
+                console.log(request);
+                alert(error);
+            }
+          });
+
+        })
+
+
+    </script>
+
+</body>
+</html>

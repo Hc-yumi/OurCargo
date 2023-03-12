@@ -91,7 +91,7 @@ func main() {
 					TruckSize:       dao.TruckSize{ID: 1},
 					PickupLocation:  "千葉県市川市",
 					ArrivalLocation: "東京都墨田区",
-					Mileage:         "20km"})
+					Mileage:         20})
 
 				return nil
 			},
