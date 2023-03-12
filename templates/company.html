@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会社登録</title>
+</head>
+<body>
+    <h1>会社登録</h1>
+
+    <table>
+        <tr>
+            <th>会社名</th>
+            <td><input type="text" name="companyName" id="companyName"></td>
+        </tr>
+
+        <tr>
+            <th>住所</th>
+            <td>
+                <p>郵便番号<input type="text" id="postalCode" name="postalCode"></p>
+                  <select name="prefNname" id="prefNname">
+                    <option value="北海道">北海道</option>
+                    <option value="青森県">青森県</option>
+                    <option value="岩手県">岩手県</option>
+                    <option value="宮城県">宮城県</option>
+                    <option value="秋田県">秋田県</option>
+                    <option value="山形県">山形県</option>
+                    <option value="福島県">福島県</option>
+                    <option value="茨城県">茨城県</option>
+                    <option value="栃木県">栃木県</option>
+                    <option value="群馬県">群馬県</option>
+                    <option value="埼玉県">埼玉県</option>
+                    <option value="千葉県">千葉県</option>
+                    <option value="東京都">東京都</option>
+                    <option value="神奈川県">神奈川県</option>
+                    <option value="新潟県">新潟県</option>
+                    <option value="富山県">富山県</option>
+                    <option value="石川県">石川県</option>
+                    <option value="福井県">福井県</option>
+                    <option value="山梨県">山梨県</option>
+                    <option value="長野県">長野県</option>
+                    <option value="岐阜県">岐阜県</option>
+                    <option value="静岡県">静岡県</option>
+                    <option value="愛知県">愛知県</option>
+                    <option value="三重県">三重県</option>
+                    <option value="滋賀県">滋賀県</option>
+                    <option value="京都府">京都府</option>
+                    <option value="大阪府">大阪府</option>
+                    <option value="兵庫県">兵庫県</option>
+                    <option value="奈良県">奈良県</option>
+                    <option value="和歌山県">和歌山県</option>
+                    <option value="鳥取県">鳥取県</option>
+                    <option value="島根県">島根県</option>
+                    <option value="岡山県">岡山県</option>
+                    <option value="広島県">広島県</option>
+                    <option value="山口県">山口県</option>
+                    <option value="徳島県">徳島県</option>
+                    <option value="香川県">香川県</option>
+                    <option value="愛媛県">愛媛県</option>
+                    <option value="高知県">高知県</option>
+                    <option value="福岡県">福岡県</option>
+                    <option value="佐賀県">佐賀県</option>
+                    <option value="長崎県">長崎県</option>
+                    <option value="熊本県">熊本県</option>
+                    <option value="大分県">大分県</option>
+                    <option value="宮崎県">宮崎県</option>
+                    <option value="鹿児島県">鹿児島県</option>
+                    <option value="沖縄県">沖縄県</option>
+                  </select>
+                <p>市区町村<input type="text" id="Locality" name="Locality"></p>
+                <p>町域・番地<input type="text" id="AddressLine" name="AddressLine"></p>
+                <p>建物名・号室<input type="text" id="BuildingName" name="BuildingName"></p>
+            </td>
+        </tr>
+    </table>
+
+    <p class="btn">
+        <span><input type="submit" value="送信" id="companyset"/></span>
+    </p>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+    <script type="text/javascript">
+        $("#companyset").on("click",function(){
+
+            let companydata={
+                "CompanyName":document.getElementById('companyName').value,
+                "CompanyAddress":[document.getElementById('prefNname').value,
+                                  document.getElementById('postalCode').value,
+                                  document.getElementById('Locality').value,
+                                  document.getElementById('AddressLine').value,
+                                  document.getElementById('BuildingName').value,
+                                 ],
+            }
+
+            $.ajax({
+                type: 'POST',
+                // url: 'https://ourcargo-platform.com/user', EC2 deploy時に使用
+                url: 'http://localhost:8080/company',
+                contentType: 'application/json',
+                data: JSON.stringify(companydata),  // access in body
+                
+                success: function(msg) {
+                // alert("success");
+                window.location.href = 'http://localhost:8080/user'; // 通常の遷移
+                window.open('http://localhost:8080/user', '_blank');
+                },
+
+                error: function (request, status, error) {
+                console.log(request);
+                alert(error);
+            }
+          });
+
+        })
+
+
+    </script>
+    
+</body>
+</html>

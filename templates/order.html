@@ -9,6 +9,8 @@
 
 </head>
 <body>
+  <h1>申し込みフォーム</h1>
+    <p>注文情報を記入ください</p>
         <div class="box_con" id="form">
             
             <table class="formTable">
@@ -29,33 +31,58 @@
               </tr>
 
               <tr>
-                <h1>ここに表示</h1>
-                <th><label for="point1">集荷場所_住所:</label></th>
-                <td><input type="text" id="point1" name="point1"></td>
+                <th>集荷場所_住所__</th>
+                  <td>
+                    <p>郵便番号<input type="text" id="postalCode_pick" name="postalCode_pick"></p>
+                      <select name="prefNname_pick" id="prefNname_pick">
+                        <option value="" selected>都道府県</option>
+                        <option value="東京都">東京都</option>
+                        <option value="神奈川県">神奈川県</option>
+                        <option value="千葉県">千葉県</option>
+                        <option value="埼玉県">埼玉県</option>
+                        <option value="茨城県">茨城県</option>
+                        <option value="栃木県">栃木県</option>
+                        <option value="群馬県">群馬県</option>
+                        <option value="新潟県">新潟県</option>
+                      </select>
+                    <p>市区町村<input type="text" id="Locality_pick" name="Locality_pick"></p>
+                    <p>町域・番地<input type="text" id="AddressLine_pick" name="AddressLine_pick"></p>
+                    <p>建物名<input type="text" id="BuildingName_pick" name="BuildingName_pick"></p>
+                    <p>バースNo.<input type="text" id="berth_pick" name="berth_pick"></p>
+                  </td>
               </tr>
-
-              <h1>Directions Input Panel</h1>
-
-              <div class="directionsContainer">
-                <div id="directionsPanel"></div>
-                <div id="directionsItinerary"></div>
-              </div>
-
-
-              <div id="main">
-                <div id="myMap" style='width:100%;height:90%;'></div>
-              </div>
-
-                <br>
+              
+              <tr>
+                <th><p></p></th>
+                <td><p>---------------------------------------</p></td>
+              </tr>
 
               <tr>
-                <th><label for="point2">着荷場所_住所:</label></th>
-                <td><input type="text" id="point2" name="point2"></td>
+                <th>着荷場所_住所__</th>
+                  <td>
+                    <p>郵便番号<input type="text" id="postalCode_arrival" name="postalCode_arrival"></p>
+                      <select name="prefNname_arrival" id="prefNname_arrival">
+                        <option value="" selected>都道府県</option>
+                        <option value="東京都">東京都</option>
+                        <option value="神奈川県">神奈川県</option>
+                        <option value="千葉県">千葉県</option>
+                        <option value="埼玉県">埼玉県</option>
+                        <option value="茨城県">茨城県</option>
+                        <option value="栃木県">栃木県</option>
+                        <option value="群馬県">群馬県</option>
+                        <option value="新潟県">新潟県</option>
+                      </select>
+                    <p>市区町村<input type="text" id="Locality_arrival" name="Locality_arrival"></p>
+                    <p>町域・番地<input type="text" id="AddressLine_arrival" name="AddressLine_arrival"></p>
+                    <p>建物名<input type="text" id="BuildingName_arrival" name="BuildingName_arrival"></p>
+                    <p>バースNo.<input type="text" id="berth_arrival" name="berth_arrival"></p>
+                  </td>
               </tr>
 
-              <p id="distance">ここに距離が出ます</p>
-              <p id="show_address_pick">ここに集荷先郵便番号が出ます</p>
-              <p id="show_address_arr">ここに着荷先郵便番号が出ます</p>
+              <tr>
+                <th>距離算出</th>
+                <td><p id="distance">ここに距離が出ます</p></td>
+              </tr>
 
               <tr>
                 <th>車格__</th>
@@ -89,65 +116,56 @@
                 <span><input type="submit" value="確認" id="runSet"/></span>
             </p>
 
-      </div>
+        </div>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
   <script src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AokHgh1grGCr3EDpuzGtpVGzME_umX7tE4TZqtjwd2yX4kyeVdRR71-FMiWzmJJg' async defer></script>
   <script type="text/javascript">
 
       $("#runSet").on("click",function(){
-
-        let data = {
-          "UserID": Number(document.getElementById('UserID').value),
-          "PickupDatetime":new Date(document.getElementById('PickupDatetime').value),
-          "ArrivalDatetime":new Date(document.getElementById('ArrivalDatetime').value),
-          "PickupLocation":document.getElementById('point1').value,
-          "ArrivalLocation":document.getElementById('point2').value,
-          "OrderDatetime":document.getElementById('OrderDatetime').value,
-          "TruckSize":Number(document.getElementById('TruckSize').value),
-          "Price":document.getElementById('Price').value,
-          }
-
         const address_url ="https://dev.virtualearth.net/REST/v1/Locations?"
 
         // 住所取得 pickup
         const address_params_pick = {
           "CountryRegion":"JP",
-          "PostalCode":"1300011",
-          "AdminDistrict":"東京都",
-          "Locality":"墨田区",
-          "AddressLine":"石原2丁目8-25",
+          "PostalCode":document.getElementById('postalCode_pick').value,
+          "AdminDistrict":document.getElementById('prefNname_pick').value,
+          "Locality":document.getElementById('Locality_pick').value,
+          "AddressLine":document.getElementById('AddressLine_pick').value,
           "key": "AokHgh1grGCr3EDpuzGtpVGzME_umX7tE4TZqtjwd2yX4kyeVdRR71-FMiWzmJJg"
         };
+        // console.log(address_params_pick);
 
           let geolcation_pickup ;
           var xhr_pic = new XMLHttpRequest();
-          xhr_pic.open("GET", address_url + "?" + new URLSearchParams(address_params_pick).toString());
+          xhr_pic.open("GET", address_url + "?" + new URLSearchParams(address_params_pick).toString(),false);
           xhr_pic.onreadystatechange = function() {
             if (xhr_pic.readyState === 4 && xhr_pic.status === 200) {
               var response = JSON.parse(xhr_pic.responseText);
-              console.log(response);
+              // console.log(response);
               let lat = response.resourceSets[0].resources[0].bbox[0];
               let lon = response.resourceSets[0].resources[0].bbox[1];
               geolcation_pickup = lat+","+lon;
-              document.getElementById("show_address_pick").innerHTML = "The address is " + geolcation_pickup;
+              console.log(geolcation_pickup);
+              // document.getElementById("show_address_pick").innerHTML = "The address is " + geolcation_pickup;
             }
           };
           xhr_pic.send();
 
         // 住所取得 arrival
-        const address_params_arr = {
+        const address_params_arrival = {
           "CountryRegion":"JP",
-          "PostalCode":"1350051",
-          "AdminDistrict":"東京都",
-          "Locality":"江東区",
-          "AddressLine":"枝川3丁目10-10",
+          "PostalCode":document.getElementById('postalCode_arrival').value,
+          "AdminDistrict":document.getElementById('prefNname_arrival').value,
+          "Locality":document.getElementById('Locality_arrival').value,
+          "AddressLine":document.getElementById('AddressLine_arrival').value,
           "key": "AokHgh1grGCr3EDpuzGtpVGzME_umX7tE4TZqtjwd2yX4kyeVdRR71-FMiWzmJJg"
         };
 
         let geolcation_arrival;
+        var distance;
         var xhr_arr = new XMLHttpRequest();
-        xhr_arr.open("GET", address_url + "?" + new URLSearchParams(address_params_arr).toString());
+        xhr_arr.open("GET", address_url + "?" + new URLSearchParams(address_params_arrival).toString(),false);
         xhr_arr.onreadystatechange = function() {
           
           if (xhr_arr.readyState === 4 && xhr_arr.status === 200) {
@@ -157,12 +175,14 @@
             let lon = response.resourceSets[0].resources[0].bbox[1];
             geolcation_arrival =lat+","+lon;
             console.log(geolcation_arrival);
-            document.getElementById("show_address_arr").innerHTML = "The address is " + geolcation_arrival;
+            // document.getElementById("show_address_arr").innerHTML = "The address is " + geolcation_arrival;
           }
         };
+
         xhr_arr.send();
 
         // 距離算出
+        var distance;
         setTimeout(function() {
           const url = "https://dev.virtualearth.net/REST/v1/Routes/Driving";
           const params = {       
@@ -172,31 +192,62 @@
           };
 
           var xhr = new XMLHttpRequest();
-          xhr.open("GET", url + "?" + new URLSearchParams(params).toString());
+          xhr.open("GET", url + "?" + new URLSearchParams(params).toString(),false);
           xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
               var response = JSON.parse(xhr.responseText);
-              console.log(response);
-              var distance = response.resourceSets[0].resources[0].routeLegs[0].travelDistance;
-              document.getElementById("distance").innerHTML = "The distance between the two points is " + (distance).toFixed(2) + " km";
+              // console.log(response);
+              distance = response.resourceSets[0].resources[0].routeLegs[0].travelDistance;
+              distance = Math.floor(distance * 1000) // meterに変換
+              document.getElementById("distance").innerHTML = "The distance between the two points is " + (distance/1000).toFixed(2) + " km";
+              post_to_server();
             }
-            console.log(distance);
           };
           xhr.send();
         }, 1000);
 
 
-      $.ajax({
-            type: 'POST',
-            url: 'https://ourcargo-platform.com/orderpage',
-            contentType: 'application/json',
-            data: JSON.stringify(data),  // access in body
-            // success: alert("success"),
-        });
+        function writeData(){
+          data = {
+            "UserID": Number(document.getElementById('UserID').value),
+            "PickupDatetime":new Date(document.getElementById('PickupDatetime').value),
+            "ArrivalDatetime":new Date(document.getElementById('ArrivalDatetime').value),
+            "PickupLocation":[address_params_pick.PostalCode,
+                              address_params_pick.AdminDistrict,
+                              address_params_pick.Locality,
+                              address_params_pick.AddressLine,
+                              document.getElementById('BuildingName_pick').value,
+                              document.getElementById('berth_pick').value
+                            ],
+            "ArrivalLocation":[address_params_arrival.PostalCode,
+                               address_params_arrival.AdminDistrict,
+                               address_params_arrival.Locality,
+                               address_params_arrival.AddressLine,
+                               document.getElementById('BuildingName_arrival').value,
+                               document.getElementById('berth_arrival').value
+                              ],
 
+            "OrderDatetime":document.getElementById('OrderDatetime').value,
+            "TruckSize":Number(document.getElementById('TruckSize').value),
+            "Price":document.getElementById('Price').value,
+            "Mileage":distance,
+          }
+          return data
+        }
+
+        function post_to_server() {
+          data = writeData()
+          $.ajax({
+                type: 'POST',
+                // url: 'https://ourcargo-platform.com/orderpage', EC2 deploy時に使用
+                url: 'http://localhost:8080/orderpage',
+                contentType: 'application/json',
+                data: JSON.stringify(data),  // access in body
+                // success: alert("success"),
+          });
+          console.log(data);
+        };            
       })
-    
-
 
 </script>
 

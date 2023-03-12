@@ -4,14 +4,17 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Launch Package",
             "type": "go",
             "mode": "debug",
             "request": "launch",
-            "program": "/home/ubuntu/ourcargo/main.go",
-            "console": "integratedTerminal",
-            "asRoot": true
+            // "program": "/home/ubuntu/ourcargo/main.go",
+            "program": "/Users/yumimoriyama/Desktop/OurCargo/OurCargo",
+            // "program": "yumimoriyama@Yumis-MacBook-Air/OurCargo/OurCargo/main.go",
+            // "console": "integratedTerminal",
+            // "asRoot": true
         }
     ]
 }
